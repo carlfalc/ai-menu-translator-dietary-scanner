@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DishSafe - AI Menu Translation & Dietary Guardian</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <title>DishSafe AI - Smart Menu Translation & Dietary Safety</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,83 +15,112 @@
         }
 
         :root {
-            --primary-dark: #0a0a0f;
-            --secondary-dark: #1a1a2e;
-            --accent-gold: #d4af37;
-            --accent-amber: #f4a460;
-            --text-white: #ffffff;
-            --text-gray: #a0a0a0;
-            --glass-bg: rgba(26, 26, 46, 0.3);
+            --neon-cyan: #00ffff;
+            --neon-purple: #9945ff;
+            --neon-pink: #ff0080;
+            --dark-bg: #0d1117;
+            --dark-secondary: #161b22;
+            --dark-tertiary: #21262d;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
-            color: var(--text-white);
+            background: var(--dark-bg);
+            color: #ffffff;
             overflow-x: hidden;
+            line-height: 1.6;
         }
 
-        /* Animated Background Particles */
-        .bg-particles {
+        /* Animated Background */
+        .bg-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: -2;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .floating-particles {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
+            z-index: -1;
         }
 
         .particle {
             position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--accent-gold);
+            width: 4px;
+            height: 4px;
+            background: var(--neon-cyan);
             border-radius: 50%;
-            opacity: 0.3;
-            animation: float 6s infinite ease-in-out;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .particle:nth-child(2) {
+            background: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3) {
+            background: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+            animation-delay: -4s;
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-            50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            50% { opacity: 1; }
         }
 
         /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
-            padding: 20px 5%;
-            backdrop-filter: blur(10px);
-            background: transparent;
-            transition: all 0.3s ease;
             z-index: 1000;
+            padding: 20px 40px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .navbar.scrolled {
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            background: rgba(13, 17, 23, 0.95);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
         }
 
-        .nav-container {
+        .nav-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            font-family: 'Orbitron', monospace;
+            font-size: 24px;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
             -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
         }
 
         .nav-links {
@@ -99,26 +130,33 @@
         }
 
         .nav-links a {
-            color: var(--text-white);
+            color: #ffffff;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
             position: relative;
         }
 
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            transition: width 0.3s ease;
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
         }
 
-        .nav-links a:hover::after {
-            width: 100%;
+        .nav-cta {
+            padding: 12px 24px;
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+            border: none;
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(153, 69, 255, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 5px 30px rgba(153, 69, 255, 0.5);
         }
 
         /* Hero Section */
@@ -126,204 +164,266 @@
             height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
             position: relative;
-            background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600') center/cover;
+            background: linear-gradient(135deg, rgba(13, 17, 23, 0.9), rgba(33, 38, 45, 0.9)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800') center/cover;
+            overflow: hidden;
         }
 
-        .hero::before {
+        .hero-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 25px;
+            color: var(--neon-cyan);
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(48px, 5vw, 72px);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ffffff, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.3); }
+            to { text-shadow: 0 0 30px rgba(0, 255, 255, 0.6), 0 0 40px rgba(153, 69, 255, 0.3); }
+        }
+
+        .hero p {
+            font-size: 20px;
+            color: #8b949e;
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn-primary {
+            padding: 18px 40px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            border: none;
+            border-radius: 30px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-secondary {
+            padding: 18px 40px;
+            background: transparent;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 30px;
+            color: var(--neon-cyan);
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.3);
+        }
+
+        .hero-visual {
+            position: relative;
+            animation: fadeInRight 1s ease-out 0.3s both;
+        }
+
+        .phone-mockup {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .phone-mockup img {
+            width: 100%;
+            height: auto;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 255, 255, 0.2);
+        }
+
+        .floating-element {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            animation: floatAround 8s ease-in-out infinite;
+        }
+
+        .floating-element:nth-child(2) {
+            top: 20%;
+            right: -40px;
+            border-color: var(--neon-purple);
+            animation-delay: -2s;
+        }
+
+        .floating-element:nth-child(3) {
+            bottom: 10%;
+            left: -40px;
+            border-color: var(--neon-pink);
+            animation-delay: -4s;
+        }
+
+        @keyframes floatAround {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 100px 40px;
+            background: var(--dark-secondary);
+            position: relative;
+        }
+
+        .stats::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(10, 10, 15, 0.9) 0%, rgba(26, 26, 46, 0.8) 100%);
-            z-index: 2;
-        }
-
-        .hero-content {
-            text-align: center;
-            z-index: 3;
-            position: relative;
-            max-width: 800px;
-            padding: 0 20px;
-        }
-
-        .hero-subtitle {
-            color: var(--accent-gold);
-            font-size: 18px;
-            font-weight: 500;
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 0.5s forwards;
-        }
-
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(48px, 8vw, 84px);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 30px;
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 0.7s forwards;
-        }
-
-        .hero-description {
-            font-size: 20px;
-            color: var(--text-gray);
-            margin-bottom: 40px;
-            line-height: 1.6;
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 0.9s forwards;
-        }
-
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            color: var(--primary-dark);
-            padding: 18px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 1.1s forwards;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
-        }
-
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-        }
-
-        .floating-shape {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(244, 164, 96, 0.1));
-            backdrop-filter: blur(10px);
-            animation: floatShape 8s infinite ease-in-out;
-        }
-
-        .floating-shape:nth-child(1) {
-            width: 100px;
-            height: 100px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .floating-shape:nth-child(2) {
-            width: 150px;
-            height: 150px;
-            top: 60%;
-            right: 15%;
-            animation-delay: 2s;
-        }
-
-        .floating-shape:nth-child(3) {
-            width: 80px;
-            height: 80px;
-            top: 80%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
-        @keyframes floatShape {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-30px) rotate(180deg); }
-        }
-
-        /* Stats Section */
-        .stats-section {
-            padding: 100px 5%;
-            background: rgba(26, 26, 46, 0.5);
-            backdrop-filter: blur(20px);
-            position: relative;
-            z-index: 3;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
         }
 
         .stats-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 60px;
-            text-align: center;
         }
 
         .stat-item {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
+            text-align: center;
+            animation: fadeInUp 1s ease-out both;
         }
 
+        .stat-item:nth-child(2) { animation-delay: 0.2s; }
+        .stat-item:nth-child(3) { animation-delay: 0.4s; }
+        .stat-item:nth-child(4) { animation-delay: 0.6s; }
+
         .stat-number {
-            font-family: 'Playfair Display', serif;
+            font-family: 'Orbitron', monospace;
             font-size: 48px;
-            font-weight: 700;
-            color: var(--accent-gold);
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             display: block;
             margin-bottom: 10px;
         }
 
         .stat-label {
-            color: var(--text-gray);
+            color: #8b949e;
             font-size: 16px;
-            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Features Section */
-        .features-section {
-            padding: 120px 5%;
+        .features {
+            padding: 120px 40px;
             position: relative;
         }
 
         .features-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 48px;
-            font-weight: 700;
+        .section-header {
             text-align: center;
             margin-bottom: 80px;
-            opacity: 0;
-            transform: translateY(30px);
+        }
+
+        .section-header h2 {
+            font-family: 'Orbitron', monospace;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, var(--neon-cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            font-size: 20px;
+            color: #8b949e;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 40px;
-            align-items: start;
+            align-items: center;
         }
 
         .feature-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: var(--dark-secondary);
+            border: 1px solid rgba(0, 255, 255, 0.1);
             border-radius: 20px;
             padding: 40px;
             position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            opacity: 0;
-            transform: translateY(50px);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
         }
 
         .feature-card::before {
@@ -331,187 +431,175 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
+            right: 0;
             height: 2px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+            border-radius: 20px 20px 0 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .feature-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(212, 175, 55, 0.4);
-            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+            opacity: 1;
         }
 
         .feature-icon {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
             border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 25px;
-            font-size: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
 
-        .feature-title {
-            font-family: 'Playfair Display', serif;
+        .feature-card h3 {
             font-size: 24px;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 15px;
-            color: var(--text-white);
+            color: #ffffff;
         }
 
-        .feature-description {
-            color: var(--text-gray);
+        .feature-card p {
+            color: #8b949e;
             line-height: 1.6;
         }
 
-        /* How It Works Section */
-        .how-it-works {
-            padding: 120px 5%;
-            background: linear-gradient(135deg, rgba(26, 26, 46, 0.3) 0%, rgba(10, 10, 15, 0.5) 100%);
-            position: relative;
+        .feature-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .steps-container {
-            max-width: 1200px;
+        .feature-visual img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 120px 40px;
+            background: var(--dark-secondary);
+        }
+
+        .how-it-works-container {
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        .steps-timeline {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 40px;
-            margin-top: 80px;
-            position: relative;
+            margin-top: 60px;
         }
 
-        .steps-timeline::before {
-            content: '';
-            position: absolute;
-            top: 40px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            z-index: 1;
-        }
-
-        .step-item {
-            flex: 1;
+        .step {
             text-align: center;
             position: relative;
-            z-index: 2;
-            opacity: 0;
-            transform: translateY(30px);
+            padding: 40px 20px;
         }
 
         .step-number {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            border: 3px solid var(--neon-cyan);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 30px;
+            font-family: 'Orbitron', monospace;
             font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            margin: 0 auto 25px;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            font-weight: 900;
+            background: var(--dark-bg);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
 
-        .step-title {
-            font-family: 'Playfair Display', serif;
+        .step h3 {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 15px;
-            color: var(--text-white);
+            color: #ffffff;
         }
 
-        .step-description {
-            color: var(--text-gray);
+        .step p {
+            color: #8b949e;
             line-height: 1.6;
         }
 
-        /* Pricing Section */
-        .pricing-section {
-            padding: 120px 5%;
+        /* Pricing */
+        .pricing {
+            padding: 120px 40px;
         }
 
         .pricing-container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 40px;
-            margin-top: 80px;
+            margin-top: 60px;
         }
 
         .pricing-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 25px;
-            padding: 50px 40px;
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
             text-align: center;
             position: relative;
-            transition: all 0.4s ease;
-            opacity: 0;
-            transform: translateY(30px);
+            transition: all 0.3s ease;
         }
 
         .pricing-card.featured {
-            border-color: var(--accent-gold);
-            transform: scale(1.05) translateY(-10px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            transform: scale(1.05);
         }
 
         .pricing-card.featured::before {
-            content: 'RECOMMENDED';
+            content: 'MOST POPULAR';
             position: absolute;
             top: -15px;
             left: 50%;
             transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            color: var(--primary-dark);
-            padding: 8px 25px;
-            border-radius: 20px;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            padding: 8px 30px;
+            border-radius: 15px;
             font-size: 12px;
             font-weight: 700;
+            letter-spacing: 1px;
         }
 
         .pricing-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--accent-gold);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
         }
 
         .plan-name {
-            font-family: 'Playfair Display', serif;
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            color: #ffffff;
         }
 
         .plan-price {
+            font-family: 'Orbitron', monospace;
             font-size: 48px;
-            font-weight: 700;
-            color: var(--accent-gold);
-            margin-bottom: 10px;
-        }
-
-        .plan-period {
-            color: var(--text-gray);
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 30px;
         }
 
@@ -522,70 +610,32 @@
 
         .plan-features li {
             padding: 10px 0;
-            color: var(--text-gray);
-            position: relative;
-            padding-left: 30px;
+            color: #8b949e;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .plan-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--accent-gold);
-            font-weight: bold;
-        }
-
-        .plan-button {
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
-            color: var(--primary-dark);
-            border: none;
-            padding: 15px 35px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .plan-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(212, 175, 55, 0.3);
+        .plan-features li:last-child {
+            border-bottom: none;
         }
 
         /* Testimonials */
-        .testimonials-section {
-            padding: 120px 5%;
-            background: url('https://images.unsplash.com/photo-1551218808-94e220e084d2?w=1600') center/cover;
+        .testimonials {
+            padding: 120px 40px;
+            background: var(--dark-secondary);
             position: relative;
-        }
-
-        .testimonials-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(10, 10, 15, 0.9) 0%, rgba(26, 26, 46, 0.8) 100%);
+            overflow: hidden;
         }
 
         .testimonials-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            position: relative;
-            z-index: 2;
         }
 
         .testimonials-marquee {
-            overflow: hidden;
-            margin-top: 80px;
-            position: relative;
-        }
-
-        .testimonials-track {
             display: flex;
-            animation: marquee 30s linear infinite;
             gap: 40px;
+            animation: marquee 30s linear infinite;
+            width: max-content;
         }
 
         @keyframes marquee {
@@ -593,19 +643,27 @@
             100% { transform: translateX(-50%); }
         }
 
-        .testimonial-card {
-            min-width: 350px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+        .testimonial {
+            min-width: 400px;
+            background: var(--dark-bg);
+            border: 1px solid rgba(0, 255, 255, 0.1);
             border-radius: 20px;
             padding: 30px;
             position: relative;
         }
 
-        .testimonial-quote {
-            color: var(--text-gray);
-            line-height: 1.6;
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            font-size: 80px;
+            color: var(--neon-cyan);
+            opacity: 0.3;
+        }
+
+        .testimonial-text {
+            color: #8b949e;
             margin-bottom: 20px;
             font-style: italic;
         }
@@ -620,23 +678,22 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-gold), var(--accent-amber));
+            border: 2px solid var(--neon-cyan);
         }
 
         .author-info h4 {
-            color: var(--text-white);
+            color: #ffffff;
             font-weight: 600;
-            margin-bottom: 5px;
         }
 
-        .author-info span {
-            color: var(--text-gray);
+        .author-info p {
+            color: #8b949e;
             font-size: 14px;
         }
 
-        /* FAQ Section */
-        .faq-section {
-            padding: 120px 5%;
+        /* FAQ */
+        .faq {
+            padding: 120px 40px;
         }
 
         .faq-container {
@@ -644,47 +701,40 @@
             margin: 0 auto;
         }
 
-        .faq-list {
-            margin-top: 80px;
-        }
-
         .faq-item {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             margin-bottom: 20px;
             overflow: hidden;
-            opacity: 0;
-            transform: translateY(20px);
         }
 
         .faq-question {
-            padding: 25px 30px;
+            padding: 25px;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
+            color: #ffffff;
             transition: all 0.3s ease;
         }
 
         .faq-question:hover {
-            background: rgba(212, 175, 55, 0.1);
+            background: rgba(0, 255, 255, 0.05);
         }
 
         .faq-answer {
-            padding: 0 30px;
+            padding: 0 25px;
             max-height: 0;
             overflow: hidden;
             transition: all 0.3s ease;
-            color: var(--text-gray);
-            line-height: 1.6;
+            color: #8b949e;
         }
 
-        .faq-item.active .faq-answer {
-            padding: 0 30px 25px;
+        .faq-answer.active {
             max-height: 200px;
+            padding: 25px;
         }
 
         .faq-icon {
@@ -692,15 +742,15 @@
         }
 
         .faq-item.active .faq-icon {
-            transform: rotate(45deg);
+            transform: rotate(180deg);
         }
 
         /* Final CTA */
         .final-cta {
-            padding: 120px 5%;
-            background: url('https://images.unsplash.com/photo-1559329007-40df8cd54826?w=1600') center/cover;
+            padding: 120px 40px;
+            background: linear-gradient(135deg, var(--dark-bg), var(--dark-secondary));
             position: relative;
-            text-align: center;
+            overflow: hidden;
         }
 
         .final-cta::before {
@@ -708,56 +758,95 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(10, 10, 15, 0.8) 0%, rgba(26, 26, 46, 0.9) 100%);
+            right: 0;
+            bottom: 0;
+            background: url('https://images.unsplash.com/photo-1574182245530-967d9b3831af?w=800') center/cover;
+            opacity: 0.1;
+            z-index: 1;
         }
 
-        .cta-content {
-            max-width: 600px;
+        .final-cta-container {
+            max-width: 800px;
             margin: 0 auto;
+            text-align: center;
             position: relative;
             z-index: 2;
         }
 
-        .cta-title {
-            font-family: 'Playfair Display', serif;
+        .final-cta h2 {
+            font-family: 'Orbitron', monospace;
             font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 25px;
-            opacity: 0;
-            transform: translateY(30px);
+            font-weight: 900;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ffffff, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .cta-description {
+        .final-cta p {
             font-size: 20px;
-            color: var(--text-gray);
+            color: #8b949e;
             margin-bottom: 40px;
-            opacity: 0;
-            transform: translateY(30px);
         }
 
         /* Footer */
         .footer {
-            background: var(--primary-dark);
-            padding: 80px 5% 40px;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 60px 40px 30px;
+            background: var(--dark-tertiary);
+            border-top: 1px solid rgba(0, 255, 255, 0.1);
         }
 
         .footer-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
             gap: 60px;
+            margin-bottom: 40px;
         }
 
-        .footer-section h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: var(--accent-gold);
+        .footer-brand {
+            grid-column: 1;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 20px;
+        }
+
+        .footer-brand p {
+            color: #8b949e;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-cyan);
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: rgba(0, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .footer-section h4 {
+            color: #ffffff;
+            font-weight: 700;
+            margin-bottom: 20px;
         }
 
         .footer-section ul {
@@ -765,25 +854,24 @@
         }
 
         .footer-section ul li {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .footer-section ul li a {
-            color: var(--text-gray);
+            color: #8b949e;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .footer-section ul li a:hover {
-            color: var(--accent-gold);
+            color: var(--neon-cyan);
         }
 
         .footer-bottom {
             text-align: center;
-            margin-top: 60px;
-            padding-top: 40px;
-            border-top: 1px solid rgba(212, 175, 55, 0.1);
-            color: var(--text-gray);
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #8b949e;
         }
 
         /* Animations */
@@ -798,272 +886,310 @@
             }
         }
 
-        /* Mobile Responsive */
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
             }
-            
-            .hero-title {
-                font-size: 48px;
+
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                text-align: center;
             }
-            
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .steps-timeline {
-                flex-direction: column;
-                gap: 60px;
-            }
-            
-            .steps-timeline::before {
-                display: none;
-            }
-            
+
             .pricing-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .footer-container {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr;
                 gap: 40px;
             }
-            
-            .testimonials-track {
-                animation-duration: 20s;
-            }
-            
-            .testimonial-card {
-                min-width: 280px;
-            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
-    <!-- Background Particles -->
-    <div class="bg-particles"></div>
+    <div class="bg-grid"></div>
+    <div class="floating-particles">
+        <div class="particle" style="left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 80%; top: 10%; animation-delay: -1s;"></div>
+        <div class="particle" style="left: 60%; top: 70%; animation-delay: -2s;"></div>
+        <div class="particle" style="left: 20%; top: 80%; animation-delay: -3s;"></div>
+        <div class="particle" style="left: 90%; top: 60%; animation-delay: -4s;"></div>
+    </div>
 
-    <!-- Navigation -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">DishSafe</div>
+        <div class="nav-content">
+            <div class="logo">DishSafe AI</div>
             <ul class="nav-links">
                 <li><a href="#features">Features</a></li>
-                <li><a href="#how-it-works">How It Works</a></li>
                 <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#testimonials">Reviews</a></li>
+                <li><a href="#faq">FAQ</a></li>
             </ul>
+            <a href="#" class="nav-cta">Get Started</a>
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero">
-        <div class="floating-elements">
-            <div class="floating-shape"></div>
-            <div class="floating-shape"></div>
-            <div class="floating-shape"></div>
-        </div>
         <div class="hero-content">
-            <div class="hero-subtitle">AI-Powered Dining Safety</div>
-            <h1 class="hero-title">Never Wonder What's<br>On Your Plate Again</h1>
-            <p class="hero-description">Instantly translate any menu and detect allergens with cutting-edge AI. Travel with confidence, dine without fear.</p>
-            <a href="#pricing" class="cta-button">
-                Start Your Journey
-                <span>→</span>
-            </a>
+            <div class="hero-text">
+                <div class="hero-badge">🚀 AI-Powered Translation</div>
+                <h1>Never Fear Foreign Menus Again</h1>
+                <p>Instantly translate any menu and detect allergens with advanced AI. Travel confidently knowing your dietary needs are protected.</p>
+                <div class="hero-cta">
+                    <a href="#" class="btn-primary">Download Free</a>
+                    <a href="#" class="btn-secondary">Watch Demo</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800" alt="DishSafe App">
+                </div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+                <div class="floating-element"></div>
+            </div>
         </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="stats-section">
+    <section class="stats">
         <div class="stats-container">
-            <div class="stat-item">
-                <span class="stat-number" data-target="500000">0</span>
-                <div class="stat-label">Menus Translated</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="98">0</span>
-                <div class="stat-label">% Accuracy Rate</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="1200">0</span>
-                <div class="stat-label">Hotels Partner</div>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number" data-target="45">0</span>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="50">0</span>
                 <div class="stat-label">Languages Supported</div>
             </div>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="99">0</span>
+                <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="100000">0</span>
+                <div class="stat-label">Users Protected</div>
+            </div>
+            <div class="stat-item reveal">
+                <span class="stat-number" data-target="24">0</span>
+                <div class="stat-label">Hour Support</div>
+            </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section class="features-section" id="features">
+    <section class="features" id="features">
         <div class="features-container">
-            <h2 class="section-title">Revolutionizing Global Dining</h2>
+            <div class="section-header reveal">
+                <h2>Revolutionary AI Features</h2>
+                <p>Experience the future of dining with cutting-edge technology that understands both language and dietary safety.</p>
+            </div>
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800" alt="Menu Translation">
+                </div>
+                <div class="feature-card reveal">
                     <div class="feature-icon">📱</div>
-                    <h3 class="feature-title">Instant Translation</h3>
-                    <p class="feature-description">Point your camera at any menu and get real-time translation in over 45 languages. Our AI understands context, cultural nuances, and culinary terms.</p>
+                    <h3>Real-Time Translation</h3>
+                    <p>Point your camera at any menu and get instant translations in your preferred language. Our AI recognizes 50+ languages and dialects with 99% accuracy.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🛡️</div>
-                    <h3 class="feature-title">Allergen Detection</h3>
-                    <p class="feature-description">Set your dietary restrictions once and receive instant alerts for allergens, ingredients, and dietary conflicts. Never risk your health again.</p>
+                <div class="feature-card reveal">
+                    <div class="feature-icon">⚠️</div>
+                    <h3>Smart Allergen Detection</h3>
+                    <p>Set your dietary restrictions once and our AI automatically flags dangerous ingredients. From gluten to nuts, we've got you covered.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏨</div>
-                    <h3 class="feature-title">Hotel Integration</h3>
-                    <p class="feature-description">Seamless integration with hotel concierge services. Luxury hotels worldwide trust DishSafe to enhance their guest experience.</p>
+                <div class="feature-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1574182245530-967d9b3831af?w=800" alt="Dietary Safety">
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌟</div>
-                    <h3 class="feature-title">Smart Recommendations</h3>
-                    <p class="feature-description">AI-powered dish recommendations based on your preferences, dietary needs, and local cuisine expertise. Discover hidden gems with confidence.</p>
+                <div class="feature-visual reveal">
+                    <img src="https://images.unsplash.com/photo-1551218808-94e220e084d2?w=800" alt="Offline Mode">
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Works Offline</h3>
+                    <p>No internet? No problem. Our offline mode ensures you're never left guessing, even in remote locations with poor connectivity.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works Section -->
-    <section class="how-it-works" id="how-it-works">
-        <div class="steps-container">
-            <h2 class="section-title">Your Safety in Three Simple Steps</h2>
-            <div class="steps-timeline">
-                <div class="step-item">
+    <section class="how-it-works">
+        <div class="how-it-works-container">
+            <div class="section-header reveal">
+                <h2>How It Works</h2>
+                <p>Three simple steps to safe, confident dining anywhere in the world.</p>
+            </div>
+            <div class="steps-container">
+                <div class="step reveal">
                     <div class="step-number">1</div>
-                    <h3 class="step-title">Scan & Translate</h3>
-                    <p class="step-description">Point your camera at any menu. Our advanced OCR and AI instantly translate every dish into your preferred language.</p>
+                    <h3>Scan Menu</h3>
+                    <p>Open the app and point your camera at any menu. Our AI instantly recognizes text in multiple languages.</p>
                 </div>
-                <div class="step-item">
+                <div class="step reveal">
                     <div class="step-number">2</div>
-                    <h3 class="step-title">Detect Allergens</h3>
-                    <p class="step-description">Based on your dietary profile, we automatically flag dishes that contain allergens or ingredients you need to avoid.</p>
+                    <h3>Get Translation</h3>
+                    <p>Receive real-time translation with cultural context and dish descriptions to help you make informed choices.</p>
                 </div>
-                <div class="step-item">
+                <div class="step reveal">
                     <div class="step-number">3</div>
-                    <h3 class="step-title">Dine Confidently</h3>
-                    <p class="step-description">Order with complete peace of mind. Get smart recommendations and enjoy authentic local cuisine safely.</p>
+                    <h3>Stay Safe</h3>
+                    <p>See instant warnings for allergens and dietary conflicts based on your personal profile and restrictions.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing-section" id="pricing">
+    <section class="pricing" id="pricing">
         <div class="pricing-container">
-            <h2 class="section-title">Choose Your Adventure</h2>
+            <div class="section-header reveal">
+                <h2>Choose Your Plan</h2>
+                <p>Start free and upgrade when you need more advanced features.</p>
+            </div>
             <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="plan-name">Traveler</div>
-                    <div class="plan-price">$9.99</div>
-                    <div class="plan-period">per month</div>
+                <div class="pricing-card reveal">
+                    <div class="plan-name">Basic</div>
+                    <div class="plan-price">Free</div>
                     <ul class="plan-features">
-                        <li>Unlimited menu scans</li>
+                        <li>5 translations per day</li>
+                        <li>10 supported languages</li>
                         <li>Basic allergen detection</li>
-                        <li>15 languages</li>
-                        <li>Mobile app access</li>
-                        <li>Email support</li>
+                        <li>Community support</li>
                     </ul>
-                    <button class="plan-button">Start Free Trial</button>
+                    <a href="#" class="btn-secondary">Get Started</a>
                 </div>
-                <div class="pricing-card featured">
-                    <div class="plan-name">Explorer</div>
-                    <div class="plan-price">$19.99</div>
-                    <div class="plan-period">per month</div>
+                <div class="pricing-card featured reveal">
+                    <div class="plan-name">Pro</div>
+                    <div class="plan-price">$9.99</div>
                     <ul class="plan-features">
-                        <li>Everything in Traveler</li>
-                        <li>Advanced AI recommendations</li>
-                        <li>45 languages</li>
+                        <li>Unlimited translations</li>
+                        <li>50+ supported languages</li>
+                        <li>Advanced allergen detection</li>
                         <li>Offline mode</li>
                         <li>Priority support</li>
-                        <li>Cultural dining insights</li>
                     </ul>
-                    <button class="plan-button">Get Explorer</button>
+                    <a href="#" class="btn-primary">Start Free Trial</a>
                 </div>
-                <div class="pricing-card">
-                    <div class="plan-name">Concierge</div>
-                    <div class="plan-price">$49.99</div>
-                    <div class="plan-period">per month</div>
+                <div class="pricing-card reveal">
+                    <div class="plan-name">Enterprise</div>
+                    <div class="plan-price">Custom</div>
                     <ul class="plan-features">
-                        <li>Everything in Explorer</li>
-                        <li>White-label solution</li>
                         <li>Hotel integration</li>
+                        <li>Restaurant partnerships</li>
                         <li>Custom branding</li>
-                        <li>24/7 phone support</li>
                         <li>Analytics dashboard</li>
+                        <li>24/7 dedicated support</li>
                     </ul>
-                    <button class="plan-button">Contact Sales</button>
+                    <a href="#" class="btn-secondary">Contact Sales</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials-section" id="testimonials">
+    <section class="testimonials" id="testimonials">
         <div class="testimonials-container">
-            <h2 class="section-title">Trusted by Travelers Worldwide</h2>
+            <div class="section-header reveal">
+                <h2>Trusted by Travelers Worldwide</h2>
+                <p>See what our users are saying about their dining adventures.</p>
+            </div>
             <div class="testimonials-marquee">
-                <div class="testimonials-track">
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"DishSafe saved my vacation in Tokyo. As someone with severe nut allergies, I could finally explore local cuisine without fear."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar"></div>
-                            <div class="author-info">
-                                <h4>Sarah Chen</h4>
-                                <span>Food Blogger</span>
-                            </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">This app saved my life in Tokyo! I have severe nut allergies and it caught several dishes that contained nuts even though I couldn't tell from the menu.</div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b2e1001a?w=100" alt="Sarah" class="author-avatar">
+                        <div class="author-info">
+                            <h4>Sarah Chen</h4>
+                            <p>Food Blogger</p>
                         </div>
                     </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"Our hotel guests love this service. It's become an essential part of our luxury experience package."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar"></div>
-                            <div class="author-info">
-                                <h4>Marcus Rivera</h4>
-                                <span>Concierge Manager, Four Seasons</span>
-                            </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">As a hotel concierge, this app has been a game-changer for helping our international guests. They love how accurate the translations are.</div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" alt="Marco" class="author-avatar">
+                        <div class="author-info">
+                            <h4>Marco Rodriguez</h4>
+                            <p>Hotel Concierge</p>
                         </div>
                     </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"The accuracy is incredible. I've used it across 12 countries and it never fails to impress."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar"></div>
-                            <div class="author-info">
-                                <h4>Elena Petrov</h4>
-                                <span>Travel Photographer</span>
-                            </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">Finally, I can explore local cuisine without fear! The offline mode worked perfectly during my trip to rural Vietnam.</div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100" alt="Emma" class="author-avatar">
+                        <div class="author-info">
+                            <h4>Emma Thompson</h4>
+                            <p>Travel Enthusiast</p>
                         </div>
                     </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"Game-changer for business travelers. I can focus on my meetings instead of worrying about what I'm ordering."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar"></div>
-                            <div class="author-info">
-                                <h4>David Kim</h4>
-                                <span>CEO, TechVenture</span>
-                            </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">The cultural context feature is amazing! It doesn't just translate - it explains what dishes actually are and how they're prepared.</div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100" alt="David" class="author-avatar">
+                        <div class="author-info">
+                            <h4>David Kim</h4>
+                            <p>Business Traveler</p>
                         </div>
                     </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"DishSafe saved my vacation in Tokyo. As someone with severe nut allergies, I could finally explore local cuisine without fear."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar"></div>
-                            <div class="author-info">
-                                <h4>Sarah Chen</h4>
-                                <span>Food Blogger</span>
-                            </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">This app saved my life in Tokyo! I have severe nut allergies and it caught several dishes that contained nuts even though I couldn't tell from the menu.</div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b2e1001a?w=100" alt="Sarah" class="author-avatar">
+                        <div class="author-info">
+                            <h4>Sarah Chen</h4>
+                            <p>Food Blogger</p>
                         </div>
                     </div>
-                    <div class="testimonial-card">
-                        <p class="testimonial-quote">"Our hotel guests love this service. It's become an essential part of our luxury experience package."</p>
-                        <div class="testimonial-author">
-                            <div class="author-avatar"></div>
-                            <div class="author-info">
-                                <h4>Marcus Rivera</h4>
-                                <span>Concierge Manager, Four Seasons</span>
-                            </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-text">As a hotel concierge, this app has been a game-changer for helping our international guests. They love how accurate the translations are.</div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100" alt="Marco" class="author-avatar">
+                        <div class="author-info">
+                            <h4>Marco Rodriguez</h4>
+                            <p>Hotel Concierge</p>
                         </div>
                     </div>
                 </div>
@@ -1071,131 +1197,105 @@
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="faq-section">
+    <section class="faq" id="faq">
         <div class="faq-container">
-            <h2 class="section-title">Frequently Asked Questions</h2>
-            <div class="faq-list">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        How accurate is the menu translation?
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Our AI achieves 98% accuracy in menu translation, trained specifically on culinary terminology and regional variations. We continuously improve our models based on real-world usage data.
-                    </div>
+            <div class="section-header reveal">
+                <h2>Frequently Asked Questions</h2>
+                <p>Everything you need to know about DishSafe AI.</p>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>How accurate is the translation?</span>
+                    <span class="faq-icon">▼</span>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Can it detect all types of allergens?
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Yes, DishSafe detects all major allergens including nuts, dairy, gluten, shellfish, soy, and more. You can customize your dietary restrictions and preferences in your profile.
-                    </div>
+                <div class="faq-answer">
+                    Our AI achieves 99% accuracy across 50+ languages. We use advanced neural networks trained on millions of menu items and food descriptions to ensure reliable translations.
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Does it work offline?
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Our Explorer and Concierge plans include offline functionality for the most common languages and allergen databases, perfect for areas with limited internet connectivity.
-                    </div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Does it work without internet?</span>
+                    <span class="faq-icon">▼</span>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        How do hotels integrate DishSafe?
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        We provide white-label solutions with custom branding, API integration, and dedicated support. Hotels can offer this as part of their concierge services or in-room amenities.
-                    </div>
+                <div class="faq-answer">
+                    Yes! Our Pro plan includes offline mode with pre-downloaded language packs for the most popular destinations. Perfect for remote areas with poor connectivity.
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Is my dietary information secure?
-                        <span class="faq-icon">+</span>
-                    </div>
-                    <div class="faq-answer">
-                        Absolutely. We use enterprise-grade encryption and never share personal dietary information. Your data stays on your device and our secure servers only.
-                    </div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>How does allergen detection work?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Set up your dietary profile once, and our AI will automatically scan ingredients and cooking methods to flag potential allergens. We cover over 200 common allergens and dietary restrictions.
+                </div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-question">
+                    <span>Can hotels integrate this for guests?</span>
+                    <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                    Absolutely! Our Enterprise plan offers white-label solutions for hotels and restaurants. Include your branding and provide this as a premium service to guests.
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Final CTA -->
     <section class="final-cta">
-        <div class="cta-content">
-            <h2 class="cta-title">Ready to Dine Without Limits?</h2>
-            <p class="cta-description">Join thousands of travelers who've discovered the freedom of fearless dining. Your next culinary adventure awaits.</p>
-            <a href="#pricing" class="cta-button">
-                Start Your Free Trial
-                <span>→</span>
-            </a>
+        <div class="final-cta-container">
+            <h2>Start Your Safe Dining Journey</h2>
+            <p>Join thousands of travelers who never worry about foreign menus again.</p>
+            <a href="#" class="btn-primary">Download Free Now</a>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-container">
+            <div class="footer-brand">
+                <div class="logo">DishSafe AI</div>
+                <p>Revolutionizing travel dining with AI-powered translation and safety features. Never fear foreign menus again.</p>
+                <div class="social-links">
+                    <a href="#">f</a>
+                    <a href="#">t</a>
+                    <a href="#">i</a>
+                    <a href="#">y</a>
+                </div>
+            </div>
             <div class="footer-section">
-                <h3>Product</h3>
+                <h4>Product</h4>
                 <ul>
                     <li><a href="#">Features</a></li>
                     <li><a href="#">Pricing</a></li>
                     <li><a href="#">API</a></li>
-                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">Enterprise</a></li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h3>Company</h3>
+                <h4>Resources</h4>
                 <ul>
-                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Guides</a></li>
+                    <li><a href="#">Status</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
                     <li><a href="#">Careers</a></li>
                     <li><a href="#">Press</a></li>
                     <li><a href="#">Contact</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h3>Resources</h3>
-                <ul>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Status</a></li>
-                    <li><a href="#">Developers</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Legal</h3>
-                <ul>
-                    <li><a href="#">Privacy</a></li>
-                    <li><a href="#">Terms</a></li>
-                    <li><a href="#">Security</a></li>
-                    <li><a href="#">Cookies</a></li>
-                </ul>
-            </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 DishSafe. All rights reserved. Empowering travelers worldwide.</p>
+            <p>&copy; 2024 DishSafe AI. All rights reserved. Privacy Policy • Terms of Service</p>
         </div>
     </footer>
 
     <script>
-        // Create background particles
-        function createParticles() {
-            const container = document.querySelector('.bg-particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                container.appendChild(particle);
-            }
-        }
-
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.querySelector('.navbar');
@@ -1206,20 +1306,6 @@
             }
         });
 
-        // Animated counter
-        function animateCounter(element, target, duration = 2000) {
-            let start = 0;
-            const increment = target / (duration / 16);
-            const timer = setInterval(() => {
-                start += increment;
-                element.textContent = Math.floor(start).toLocaleString();
-                if (start >= target) {
-                    element.textContent = target.toLocaleString();
-                    clearInterval(timer);
-                }
-            }, 16);
-        }
-
         // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
@@ -1229,47 +1315,61 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                    
-                    // Animate counters
-                    if (entry.target.classList.contains('stat-item')) {
-                        const number = entry.target.querySelector('.stat-number');
-                        const target = parseInt(number.dataset.target);
-                        animateCounter(number, target);
-                    }
-                    
-                    observer.unobserve(entry.target);
+                    entry.target.classList.add('active');
                 }
             });
         }, observerOptions);
 
-        // Observe elements for animation
-        document.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            
-            const animatedElements = document.querySelectorAll(
-                '.section-title, .feature-card, .step-item, .pricing-card, .faq-item, .stat-item, .cta-title, .cta-description'
-            );
-            
-            animatedElements.forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
         });
 
-        // FAQ toggle functionality
+        // Animated counters
+        const counters = document.querySelectorAll('.stat-number');
+        const animateCounter = (counter) => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+
+            const updateCounter = () => {
+                if (current < target) {
+                    current += increment;
+                    counter.textContent = Math.floor(current);
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target;
+                    if (target === 99) counter.textContent = '99%';
+                    if (target === 100000) counter.textContent = '100K+';
+                    if (target === 24) counter.textContent = '24/7';
+                }
+            };
+            updateCounter();
+        };
+
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target.querySelector('.stat-number');
+                    if (counter && !counter.classList.contains('animated')) {
+                        counter.classList.add('animated');
+                        setTimeout(() => animateCounter(counter), 300);
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-item').forEach(item => {
+            statsObserver.observe(item);
+        });
+
+        // FAQ Accordion
         document.querySelectorAll('.faq-question').forEach(question => {
             question.addEventListener('click', () => {
                 const faqItem = question.parentElement;
-                const isActive = faqItem.classList.contains('active');
+                const answer = faqItem.querySelector('.faq-answer');
                 
-                // Close all FAQ items
-                document.querySelectorAll('.faq-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // Open clicked item if it wasn't active
-                if (!isActive) {
-                    faqItem.classList.add('active');
-                }
+                faqItem.classList.toggle('active');
+                answer.classList.toggle('active');
             });
         });
 
@@ -1287,23 +1387,54 @@
             });
         });
 
-        // Add hover effects to cards
-        document.querySelectorAll('.feature-card, .pricing-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-10px) rotateX(5deg)';
+        // Floating particles animation
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = '100%';
+            particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            document.querySelector('.floating-particles').appendChild(particle);
+
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }
+
+        setInterval(createParticle, 2000);
+
+        // Parallax effect for hero background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.backgroundPosition = `center ${rate}px`;
+            }
+        });
+
+        // Add hover effects to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) rotateX(5deg) rotateY(5deg)';
             });
             
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0) rotateX(0)';
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
             });
         });
 
-        // Parallax effect for hero section
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
-            const rate = scrolled * -0.5;
-            hero.style.transform = `translateY(${rate}px)`;
+        // Pricing card hover effects
+        document.querySelectorAll('.pricing-card:not(.featured)').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.borderColor = 'var(--neon-cyan)';
+                this.style.boxShadow = '0 20px 40px rgba(0, 255, 255, 0.2)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                this.style.boxShadow = 'none';
+            });
         });
     </script>
 </body>
