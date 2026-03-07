@@ -1,0 +1,16 @@
+{
+  "name": "ai-menu-translator-dietary-scanner",
+  "version": "0.1.0",
+  "description": "Travel dining pain point where tourists struggle with foreign menus and dietary restrictions. AI-powered app uses camera to translate menus in real-time and flags allergens/dietary conflicts based on ",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "ai",
+    "saas",
+    "the-firm"
+  ],
+  "author": "The Firm — AI Venture Studio",
+  "license": "MIT"
+}
